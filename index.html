@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta Pergamino Sellada</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="open-prompt">
+        <div class="envelope-icon">✉️</div> 
+        Presiona para abrir la carta
+    </div>
+
+    <div class="parchment">
+        <div class="letter-content">
+            <h1>Para mi pequeña coshita</h1>
+            <p>Bueno, bizcochito lindo, chiquitico, apapachable, amoroso y muchas cosas más…</p>
+             <p>El tiempo, ese Correcaminos implacable... y yo, a veces sintiéndome como el Coyote en su eterna persecución. Pero mi escepticismo tenía raíces más profundas: había renunciado a la vulnerable esperanza de conectar, de creer en otro ser, porque sentía que ese barco ya había zarpado para mí.  Y sin embargo, en medio de esa resignación, como si el destino me ofreciera una última vuelta inesperada, llegaste tú. Quizás lo más importante no es atrapar el tiempo, sino descubrir que, incluso cuando has dejado de perseguir, algo o alguien valioso puede aparecer y enseñarte una nueva forma de reformar esos "cimientos" que se daban por hechos, fijos y permanentes.</p>
+             <p>A pesar de eso, me alegra y me sorprende que ya hace un año te conocí, y empezamos a escribir esta bonita historia. Con altos y bajos, sentimientos y desdenes —que, a fin de cuentas, es como suele funcionar la vida: con su frágil equilibrio que quienes se atreven a sostener, pueden disfrutar de los pequeños placeres, como el querer y entregarse.</p>
+             <p>También es cierto que me entristece que haya llegado una personita tan especial en estos momentos llenos de ruido y caos… Sin embargo, todo esto forma parte de mí. Y así como hay malos momentos, también hay buenos momentos, muy buenos, de hecho. Agradezco tu paciencia y tu conciencia frente a una realidad quizás más distinta a la de la gran mayoría.</p>
+             <p>Gracias por darme pequeños fragmentos de tu ser y permitirme atesorarlos en mi presente. No sé qué nos espera en el futuro, sin embargo, estoy agradecido por el presente que me ha traído hasta este puerto. Sea lo que sea que pase, lo que ya se ha escrito, nadie me lo podrá arrebatar. Quizás, con el tiempo, estas palabras se olviden… pero lo que pienso y siento ahora, el tiempo no podrá llevárselo. Porque le dediqué un espacio infinito a sentir y dejarme llevar. Y eso… eso ya es otra escena más que queda presente en la memoria del universo repitiendose por siempre.</p>
+             <p>---</p>
+             <p><em>De: Tu querido Buho 🦉🐈</em></p>
+        </div>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const openPrompt = document.getElementById('open-prompt');
+    const parchment = document.querySelector('.parchment');
+    const letterContent = document.querySelector('.letter-content');
+
+    if (openPrompt && parchment && letterContent) {
+        // 1. Evento para "abrir" (mostrar) el pergamino
+        openPrompt.addEventListener('click', () => {
+            openPrompt.classList.add('hidden'); // Oculta el botón
+            parchment.classList.add('unrolling'); // Aplica clase para mostrar pergamino (ahora sin animación larga)
+
+            // 2. Inicia el typewriter DESPUÉS de que el pergamino sea visible
+            // Usamos setTimeout para dar tiempo al navegador a renderizar el pergamino visible
+            setTimeout(() => {
+                startTypewriter(letterContent); // Llama a la función del typewriter
+            }, 450); // Retraso en ms. Ajusta según la duración de la transición CSS (0.4s = 400ms) + pequeño margen
+        });
+
+        // --- ELIMINADO O COMENTADO ---
+        // Ya no necesitamos esperar a animationend porque no hay animación 'unroll'
+        /*
+        parchment.addEventListener('animationend', () => {
+            if (parchment.classList.contains('unrolling')) {
+                 startTypewriter(letterContent);
+            }
+        }, { once: false });
+        */
+
+    } else {
+        console.error("Error: Elementos necesarios (#open-prompt, .parchment o .letter-content) no encontrados.");
+    }
+});
+
+// --- Funciones para el efecto Typewriter (SIN CAMBIOS) ---
+
+async function startTypewriter(container) {
+    // Selecciona todos los elementos de texto directo (h1, p)
+    const elementsToAnimate = container.querySelectorAll('h1, p');
+    const originalContents = [];
+
+    // Guarda el contenido original y ASEGÚRATE de que estén vacíos inicialmente
+    // Aunque el CSS los oculta, vaciarlos aquí es redundante pero seguro.
+    elementsToAnimate.forEach(el => {
+        originalContents.push({ element: el, html: el.innerHTML });
+        el.innerHTML = ''; // Limpia el contenido por si acaso
+        // ¡IMPORTANTE! NO los hacemos visibles aquí todavía.
+    });
+
+    // Recorre cada elemento
+    for (const item of originalContents) {
+        // === CAMBIO CLAVE ===
+        // Haz visible el elemento JUSTO ANTES de empezar a escribir en él
+        item.element.style.visibility = 'visible';
+
+        // "Escribe" su texto esperando a que termine el anterior
+        await typeText(item.element, item.html);
+
+        // Pausa breve entre párrafos (opcional)
+        await new Promise(resolve => setTimeout(resolve, 200)); // 200ms de pausa
+    }
+}
+
+// Función typeText (SIN CAMBIOS - ya funciona correctamente)
+function typeText(element, html) {
+    return new Promise(resolve => {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        const textToType = tempDiv.textContent || tempDiv.innerText || "";
+        let index = 0;
+        const typingSpeed = 40; // ms por carácter
+
+        element.classList.add('typing-cursor');
+
+        function typeCharacter() {
+            if (index < textToType.length) {
+                element.textContent += textToType.charAt(index);
+                index++;
+                setTimeout(typeCharacter, typingSpeed);
+            } else {
+                element.innerHTML = html; // Restaura HTML original
+                element.classList.remove('typing-cursor');
+                resolve();
+            }
+        }
+        typeCharacter();
+    });
+}
+    </script>
+
+</body>
+</html>

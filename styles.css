@@ -1,0 +1,141 @@
+body {
+    background-color: #5d4037;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+
+    padding: 20px;
+    margin: 0;
+    /* overflow: auto; <-- Puedes mantenerlo o quitarlo según necesites scroll */
+}
+
+/* Estilo para el botón/prompt inicial (sin cambios) */
+#open-prompt {
+    background-color: #e0cda8;
+    color: #4e342e;
+    padding: 25px 40px;
+    border-radius: 10px;
+    border: 1px solid #c8b7a1;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    font-family: 'Merienda', cursive;
+    font-size: 1.2em;
+    text-align: center;
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+#open-prompt:hover {
+    background-color: #d4be9a;
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+#open-prompt .envelope-icon {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    display: block;
+}
+
+#open-prompt.hidden {
+    opacity: 0;
+    transform: scale(0.8);
+    pointer-events: none;
+    position: absolute;
+}
+
+/* Contenedor del pergamino */
+.parchment {
+    background-color: #f3e9d2;
+    border: 1px solid #c8b7a1;
+    border-radius: 10px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
+    width: 80%;
+    max-width: 650px;
+
+    /* Estado inicial: Oculto */
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden; /* Mantenemos hidden inicialmente */
+
+    /* AÑADIDO: Transición suave para la aparición */
+    transition: opacity 0.4s ease-out, max-height 0.4s ease-out;
+}
+
+/* Clase que ahora solo MUESTRA el pergamino (sin animación larga) */
+.parchment.unrolling {
+    /* Quitamos la animación 'unroll' */
+    /* animation: unroll 5s ease-out 0.1s forwards; */
+
+    /* Establecemos el estado final directamente */
+    max-height: 1500px; /* O usa max-content si prefieres */
+    opacity: 1;
+    overflow: visible; /* Hacemos visible el contenido */
+    /* Quitamos el margin-top animado si ya no es necesario */
+    /* margin-top: 0; */
+}
+
+
+/* Contenido dentro del pergamino (sin cambios) */
+.letter-content {
+    padding: 30px 40px;
+    font-family: 'Merienda', cursive;
+    color: #4e342e;
+    line-height: 1.8;
+    /* Aseguramos que el contenido sea visible si el padre tiene overflow:hidden */
+    /* Esto usualmente no es necesario si el padre cambia a overflow:visible */
+}
+
+.letter-content h1 {
+    text-align: center;
+    color: #3e2723;
+    margin-bottom: 25px;
+}
+
+/* --- Estilos para el cursor Typewriter (Sin cambios) --- */
+.typing-cursor::after {
+    content: '|';
+    display: inline-block;
+    margin-left: 3px;
+    opacity: 1;
+    animation: blink 0.8s infinite;
+    font-weight: bold;
+    color: #4e342e;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.letter-content p:empty {
+    margin-bottom: 0;
+}
+
+/* NUEVO: Ocultar los elementos de texto inicialmente */
+.parchment .letter-content > * { /* Selecciona hijos directos como h1, p */
+    visibility: hidden; /* Ocultos pero ocupan espacio */
+}
+
+
+.letter-content h1 {
+    text-align: center;
+    color: #3e2723;
+    margin-bottom: 25px;
+}
+
+
+/* --- ELIMINADO O COMENTADO --- */
+/*
+@keyframes unroll {
+    from {
+        max-height: 0;
+        opacity: 0.5;
+        margin-top: 50px;
+    }
+    to {
+        max-height: 1500px;
+        opacity: 1;
+        margin-top: 0;
+    }
+}
+*/
